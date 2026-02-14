@@ -1,1 +1,165 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ho una domanda per te...</title>
+    <style>
+        /* Reset e Base */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            background-color: #fff0f3;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+            touch-action: manipulation;
+        }
 
+        .container {
+            background: white;
+            width: 90%;
+            max-width: 350px;
+            padding: 30px 20px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(255, 75, 110, 0.15);
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #ff4b6e;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .gif-placeholder {
+            font-size: 70px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column; /* Colonna su mobile per facilità */
+            gap: 15px;
+            margin-top: 30px;
+            align-items: center;
+        }
+
+        button {
+            width: 100%;
+            max-width: 200px;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #yesBtn {
+            background-color: #ff4b6e;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 75, 110, 0.3);
+        }
+
+        #noBtn {
+            background-color: #f0f0f0;
+            color: #888;
+            position: relative;
+        }
+
+        .hidden { display: none; }
+
+        #success-msg {
+            color: #ff4b6e;
+            font-weight: bold;
+            font-size: 1.4rem;
+            animation: pop 0.5s ease-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.5); }
+            100% { transform: scale(1); }
+        }
+
+        .floating-heart {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <span class="gif-placeholder" id="icon">💖</span>
+        <h1 id="question">Vuoi essere la mia San Valentina per questo 2026?</h1>
+        
+        <div class="buttons" id="btnGroup">
+            <button id="yesBtn" onclick="celebrate()">SÌ! 😍</button>
+            <button id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">No</button>
+        </div>
+
+        <div id="success-msg" class="hidden">
+            Sapevo che avresti detto di sì!<br>Ti aspetto! 🌹🥂
+        </div>
+    </div>
+
+    <script>
+        function moveButton() {
+            const noBtn = document.getElementById('noBtn');
+            
+            // Calcolo limiti per non far uscire il tasto dallo schermo
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+            
+            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            noBtn.style.zIndex = "999";
+        }
+
+        function celebrate() {
+            document.getElementById('question').classList.add('hidden');
+            document.getElementById('btnGroup').classList.add('hidden');
+            document.getElementById('success-msg').classList.remove('hidden');
+            document.getElementById('icon').innerHTML = "✨🥰✨";
+            document.body.style.backgroundColor = "#ffc8dd";
+            
+            setInterval(createHeart, 300);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            const icons = ['❤️', '💖', '🌸', '✨', '🌹'];
+            heart.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            
+            document.body.appendChild(heart);
+
+            const duration = 3000 + Math.random() * 2000;
+            const animation = heart.animate([
+                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                { transform: `translateY(-110vh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+            ], { duration: duration, easing: 'linear' });
+
+            animation.onfinish = () => heart.remove();
+        }
+    </script>
+</body>
+</html>
